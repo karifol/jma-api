@@ -11,7 +11,7 @@ function App() {
     <>
     {clicked ? (
       <div className="h-screen flex flex-col justify-center items-center">
-      <TitleCard text="気象庁API"/>
+      <TitleCard text="気象庁JSON"/>
       <div>地点名を入力してください</div>
       <div>
         <input type="text" value={city} onChange={(e) => setCity(e.target.value)} className='border-2 border-gray-500 rounded-md p-1 m-1'/>
