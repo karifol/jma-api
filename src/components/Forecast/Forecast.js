@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 
-function Overview({ city }) {
+function Forecast({ city }) {
   const [forecast, setForecast] = useState([])
   useEffect(() => {
     loadForecast(city)
@@ -18,7 +18,7 @@ function Overview({ city }) {
 }
 
 const loadForecast = async (city) => {
-  const url = `https://www.jma.go.jp/bosai/forecast/data/forecast/120000.json`
+  const url = `https://www.jma.go.jp/bosai/forecast/data/forecast/${ city }.json`
   const res = await fetch(url)
     .then(res => res.json())
     .then(data => {
@@ -47,7 +47,7 @@ const weeklyTemp = (obj) => {
   for (let i = 0; i < 7; i++) {
     const timeDifine = timeDifines[i]
     const date = timeDifine.split('T')[0]
-    const [year, month, day] = date.split('-')
+    const [_year, month, day] = date.split('-')
     const dateStr = `${month}月${day}日`
     html += `<div class='text-xl ml-5'>${dateStr}</div>`
     // areas
@@ -196,4 +196,4 @@ const forecast3days = async (obj) => {
   document.getElementById('overviewContent').innerHTML += html
 }
 
-export default Overview
+export default Forecast
