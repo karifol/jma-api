@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TitleCard from './components/TitleCard.js/TitleCard';
 import Overview from './components/Overview/Overview';
 import Forecast from './components/Forecast/Forecast';
@@ -9,34 +9,72 @@ function App() {
   const [city, setCity] = useState("東京");
   const [number, setNumber] = useState(130000);
   const [clicked, setClicked] = useState(true);
+  const [cities, setCities] = useState([])
+  const [citiesObj, setCitiesObj] = useState({})
+
+  useEffect(() => {
+    const loadCities = async () => {
+      const url = `https://www.jma.go.jp/bosai/common/const/area.json`
+      const res = await fetch(url)
+      const data = await res.json()
+      const officeObj = data.offices
+      const cities = Object.keys(officeObj)
+      setCitiesObj(officeObj)
+      setCities(cities)
+    }
+    loadCities()
+  }, [])
 
   const onClick = async () => {
-    const number = cityToNumber(city)
-    setNumber(number)
+    // const number = cityToNumber(city)
+    // setNumber(number)
     setClicked(false)
   }
 
   return (
     <>
     {clicked ? (
-      <div className="h-screen flex flex-col justify-center items-center">
+      cities.length == 0 ?
+      (<div className="h-screen flex flex-col justify-center items-center"></div> ) :
+      (<div className="h-screen flex flex-col justify-center items-center">
       <TitleCard text="気象庁JSON"/>
       <div>地点名を入力してください</div>
       <div>
-        <input type="text" value={city} onChange={(e) => setCity(e.target.value)} className='border-2 border-gray-500 rounded-md p-1 m-1'/>
+        {
+          <select onChange={(e) => {
+            setCity(citiesObj[e.target.value].name);
+            setNumber(e.target.value);
+          }} className='border-2 border-gray-500 rounded-md p-1 m-1'>
+            {
+              cities.map(city => {
+                return (
+                  <option value={city} key={city}>{citiesObj[city].name}</option>
+                )
+              })
+            }
+          </select>
+        }
         <button onClick={() => onClick()} className="border-2 border-gray-500 rounded-md p-1 m-1">検索</button>
       </div>
-    </div>
+    </div>)
     ) : (
       <div className="h-screen p-10 flex flex-col items-center">
         <TitleCard text={city} />
         <Overview city={number} />
-        <OverviewWeekly city={number} />
-        <Forecast city={number} />
+        {/* <OverviewWeekly city={number} />
+        <Forecast city={number} /> */}
       </div>
     )}
     </>
   );
+}
+
+const loadCities = async () => {
+  const url = `https://www.jma.go.jp/bosai/common/const/area.json`
+  const res = await fetch(url)
+  const data = await res.json()
+  const officeObj = data.offices
+  return officeObj
 }
 
 const cityToNumber = (city) => {
