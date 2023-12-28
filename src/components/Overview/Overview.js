@@ -7,11 +7,7 @@ function Overview({ city }) {
       const overviewText = document.getElementById('overviewText')
       const textArray = data.text.split('\n')
       for (const text of textArray) {
-        if (text === '') {
-          overviewText.innerHTML += `<div class='mb-2 border-solid border-b-4 w-full'></div>`;
-        } else {
-          overviewText.innerHTML += `<div>${text}</div>`;
-        }
+        overviewText.innerHTML += `<div>${text}</div>`;
       }
     })
   }, [])
