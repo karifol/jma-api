@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import TitleCard from './components/TitleCard.js/TitleCard';
 import Overview from './components/Overview/Overview';
 import Forecast from './components/Forecast/Forecast';
-import OverviewWeekly from './components/OverviewWeekly/OverviewWeekly';
 
 function App() {
   const [city, setCity] = useState("群馬県");
@@ -46,7 +45,7 @@ function App() {
             {
               cities.map(num => {
                 return (
-                  <option value={num}>{citiesObj[num].name}</option>
+                  <option value={num} key={num}>{citiesObj[num].name}</option>
                 )
               })
             }
@@ -59,7 +58,6 @@ function App() {
       <div className="h-screen p-10 flex flex-col items-center">
         <TitleCard text={city} />
         <Overview city={number} />
-        {/* <OverviewWeekly city={number} /> */}
         <Forecast city={number} /> 
       </div>
     )}

@@ -38,7 +38,6 @@ const forecastWeek = async (obj) => {
  * @param {*} obj 
  */
 const weeklyTemp = (obj) => {
-  console.log(obj)
   const timeDifines = obj["timeDefines"]
   let html = `
     <div class='my-5'>
@@ -118,22 +117,42 @@ const probability6Hours = (obj) => {
     <div class='my-5'>
       <div class='text-2xl mb-2 border-double border-b-4'>6時間降水確率</div>
   `;
+  html += `<table class='ml-5'>`
+  html += `
+    <tr>
+      <th></th>
+  `
+  const areas = obj["areas"]
+  for (const area of areas) {
+    const areaName = area["area"]["name"]
+    html += `<th class='px-5'>${areaName}</th>`
+  }
+  html += `</tr>`
   for (let i = 0; i < 5; i++) {
     const timeDifine = timeDifines[i]
     const date = timeDifine.split('T')[0]
     const [year, month, day] = date.split('-')
     const hour = timeDifine.split('T')[1].split(':')[0]
     const dateStr = `${month}月${day}日${hour}時`
-    html += `<div class='text-xl ml-5'>${dateStr}</div>`
+    html += `
+      <tr class='border-b-2'>
+        <td class='text-xl py-2 px-5'>${dateStr}</td>`
     // areas
     const areas = obj["areas"]
     for (const area of areas) {
       const areaName = area["area"]["name"]
       const pop = area["pops"][i]
-      html += `<div class='ml-10'>${areaName}: ${pop}％</div>`
+      html += `
+      <td class='text-center'>
+        <div class='flex justify-center	items-center'>
+          <div class='text-xl'>${pop}</div>
+          <div>％</div>
+        </div>
+      </td>`
     }
+    html += `</tr>`
   }
-  html += `</div>`
+  html += `</table>`
   document.getElementById('overviewContent').innerHTML += html
 }
 
@@ -147,20 +166,38 @@ const todayTomorrow = (obj) => {
     <div class='my-5'>
       <div class='text-2xl mb-2 border-double border-b-4'>今日・明日の最高・最低気温</div>
   `;
+  html += `<table class='ml-5'>`
+  html += `
+    <tr>
+      <th></th>`
+  const areas = obj["areas"]
+  for (const area of areas) {
+    const areaName = area["area"]["name"]
+    html += `<th class='px-5'>${areaName}</th>`
+  }
+  html += `</tr>`
   for (let i = 0; i < 2; i++) {
     const timeDifine = timeDifines[i]
     const date = timeDifine.split('T')[0]
-    const [year, month, day] = date.split('-')
-    const hour = timeDifine.split('T')[1].split(':')[0]
-    const dateStr = `${month}月${day}日${hour}時`
-    html += `<div class='text-xl ml-5'>${dateStr}</div>`
+    const [_year, month, day] = date.split('-')
+    const dateStr = `${month}月${day}日`
+    html += `
+      <tr class='border-b-2'>
+        <td class='text-xl py-2 px-5'>${dateStr}</td>`
     // areas
     const areas = obj["areas"]
     for (const area of areas) {
       const areaName = area["area"]["name"]
       const temp = area["temps"][i]
-      html += `<div class='ml-10'>${areaName}: ${temp}℃</div>`
+      html += `
+      <td class='text-center'>
+        <div class='flex justify-center	items-center'>
+          <div class='text-xl'> ${temp}</div>
+          <div>℃</div>
+        </div>
+      </td>`
     }
+    html += `</tr>`
   }
   html += `</div>`
   document.getElementById('overviewContent').innerHTML += html
@@ -176,21 +213,37 @@ const forecast3days = async (obj) => {
     <div class='my-5'>
       <div class='text-2xl mb-2 border-double border-b-4'>3日予報</div>
   `;
+  html += `<table class='ml-5'>`
+  html += `
+    <tr>
+      <th></th> `
+  const areas = obj["areas"]
+  for (const area of areas) {
+    const areaName = area["area"]["name"]
+    html += `<th class='px-5'>${areaName}</th>`
+  }
+  html += `</tr>`
   for (let i = 0; i < 3; i++) {
     const timeDifine = timeDifines[i]
     const date = timeDifine.split('T')[0]
     const [year, month, day] = date.split('-')
     const dateStr = `${month}月${day}日`
-    html += `<div class='text-xl ml-5'>${dateStr}</div>`
+    html += `
+      <tr class='border-b-2'>
+        <td class='text-xl py-2 px-5'>${dateStr}</td>`
     // areas
     const areas = obj["areas"]
     for (const area of areas) {
       const areaName = area["area"]["name"]
-      const weatherCode = area["weatherCodes"][i]
       const weather = area["weathers"][i]
-      const wind = area["winds"][i]
-      html += `<div class='ml-10'>${areaName}: ${weatherCode} ${weather} ${wind}</div>`
+      html += `
+      <td class='text-center px-7'>
+        <div class='flex justify-center	items-center'>
+          <div class='text-xl'>${weather}</div>
+        </div>
+      </td>`
     }
+    html += `</tr>`
   }
   html += `</div>`
   document.getElementById('overviewContent').innerHTML += html
