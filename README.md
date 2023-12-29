@@ -1,5 +1,5 @@
 # TL;DR
 気象庁HPにあるJSONファイルから天気予報を読み込む
 
-# github pages
+# DEMO
 https://karifol.github.io/jma-api/
