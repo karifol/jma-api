@@ -43,24 +43,42 @@ const weeklyTemp = (obj) => {
     <div class='my-5'>
       <div class='text-2xl mb-2 border-double border-b-4'>週間気温</div>
   `;
+  html += `<table class='ml-5'>`
+  html += `
+    <tr>
+      <th></th>`
+  const areas = obj["areas"]
+  for (const area of areas) {
+    const areaName = area["area"]["name"]
+    html += `<th class='px-5'>${areaName}</th>`
+  }
+  html += `</tr>`
   for (let i = 0; i < 7; i++) {
     const timeDifine = timeDifines[i]
     const date = timeDifine.split('T')[0]
     const [_year, month, day] = date.split('-')
     const dateStr = `${month}月${day}日`
-    html += `<div class='text-xl ml-5'>${dateStr}</div>`
+    html += `<tr class='border-b-2'><td class='text-xl py-2 px-5'>${dateStr}</td>`
     // areas
     const areas = obj["areas"]
     for (const area of areas) {
-      const max = area["tempsMax"][i]
-      const maxUpper = area["tempsMaxUpper"][i]
-      const maxLower = area["tempsMaxLower"][i]
-      const min = area["tempsMin"][i]
-      const minUpper = area["tempsMinUpper"][i]
-      const minLower = area["tempsMinLower"][i]
-      html += 
-        `<div class='ml-10'>最高気温： ${maxLower}℃ < ${max}℃ < ${maxUpper}℃</div>
-        <div class='ml-10'>最低気温： ${minLower}℃ < ${min}℃ < ${minUpper}℃</div>`
+      const tempMaxRaw = area["tempsMax"][i]
+      const tempMinRaw = area["tempsMin"][i]
+      const tempMax = tempMaxRaw ? `${tempMaxRaw}` : "-"
+      const tempMin = tempMinRaw ? `${tempMinRaw}` : "-"
+      html += `
+      <td class='items-center'>
+        <div class='justify-center items-center'>
+          <div class='flex items-center content-center justify-center'>
+            <div class='text-xl text-center'>${tempMax}</div>
+            <div>℃</div>
+          </div>
+          <div class='flex items-center content-center justify-center'>
+            <div class='text-xl'>${tempMin}</div>
+            <div>℃</div>
+          </div>
+        </div>
+      </td>`
     }
   }
   html += `</div>`
@@ -77,21 +95,44 @@ const weeklyWeather = (obj) => {
     <div class='my-5'>
       <div class='text-2xl mb-2 border-double border-b-4'>週間天気</div>
   `;
+  html += `<table class='ml-5'>`
+  html += `
+    <tr>
+      <th></th>`
+  const areas = obj["areas"]
+  for (const area of areas) {
+    const areaName = area["area"]["name"]
+    html += `<th class='px-5'>${areaName}</th>`
+  }
+  html += `</tr>`
   for (let i = 0; i < 7; i++) {
     const timeDifine = timeDifines[i]
     const date = timeDifine.split('T')[0]
-    const [year, month, day] = date.split('-')
+    const [_year, month, day] = date.split('-')
     const dateStr = `${month}月${day}日`
-    html += `<div class='text-xl ml-5'>${dateStr}</div>`
+    html += `<tr class='border-b-2'><td class='text-xl py-2 px-5'>${dateStr}</td>`
     // areas
     const areas = obj["areas"]
     for (const area of areas) {
-      const pop = area["pops"][i]
-      const reliability = area["reliabilities"][i]
+      const popRaw = area["pops"][i]
+      const pop = popRaw ? `${popRaw}％` : "-"
       const weather = area["weatherCodes"][i]
-      html += `<div class='ml-10'>${pop}％ ${reliability} ${weather}</div>`
+      const reliabilityRaw = area["reliabilities"][i]
+      const reliability = reliabilityRaw  ? `${reliabilityRaw}` : "-";
+      html += `
+      <td class='text-center'>
+        <div class='justify-center	items-center'>
+          <div>${weather}</div>
+          <div>${pop}</div>
+          <div>${reliability}</div>
+        </div>
+      </td>`
     }
+
+    html += `</tr>`
   }
+
+  
   html += `</div>`
   document.getElementById('overviewContent').innerHTML += html
 }
@@ -208,6 +249,7 @@ const todayTomorrow = (obj) => {
  * @param {*} obj
  */
 const forecast3days = async (obj) => {
+  console.log(obj)
   const timeDifines = obj["timeDefines"]
   let html = `
     <div class='my-5'>
@@ -237,12 +279,13 @@ const forecast3days = async (obj) => {
       const areaName = area["area"]["name"]
       const weather = area["weathers"][i]
       html += `
-      <td class='text-center px-7'>
+      <td class='text-center'>
         <div class='flex justify-center	items-center'>
-          <div class='text-xl'>${weather}</div>
+          <div>${weather}</div>
         </div>
       </td>`
     }
+
     html += `</tr>`
   }
   html += `</div>`

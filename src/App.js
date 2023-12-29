@@ -6,7 +6,7 @@ import Forecast from './components/Forecast/Forecast';
 
 function App() {
   const [city, setCity] = useState("群馬県");
-  const [number, setNumber] = useState(130000);
+  const [number, setNumber] = useState(100000);
   const [clicked, setClicked] = useState(true);
   const [cities, setCities] = useState([])
   const [citiesObj, setCitiesObj] = useState({})
