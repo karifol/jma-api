@@ -1,4 +1,5 @@
 import React from 'react'
+import Chart from 'chart.js/auto'
 import { useEffect, useState } from 'react'
 
 function Forecast({ city }) {
@@ -38,6 +39,7 @@ const forecastWeek = async (obj) => {
  * @param {*} obj 
  */
 const weeklyTemp = (obj) => {
+  console.log(obj)
   const timeDifines = obj["timeDefines"]
   let html = `
     <div class='my-5'>
@@ -82,7 +84,55 @@ const weeklyTemp = (obj) => {
     }
   }
   html += `</div>`
+  html += `</table>`
   document.getElementById('overviewContent').innerHTML += html
+
+  // chart.js
+  html += `
+    <div class='flex justify-center items-center w-3/4'>
+      <canvas id="myChart"></canvas>
+    </div>`
+  document.getElementById('overviewContent').innerHTML += html
+  const ctx = document.getElementById('myChart');
+  const maxArr = areas[0]["tempsMax"].slice(1, 7)
+  const minArr = areas[0]["tempsMin"].slice(1, 7)
+  const dateArr = timeDifines.slice(1, 7).map(text => {
+    const date = text.split('T')[0]
+    const [_year, month, day] = date.split('-')
+    return `${month}月${day}日`
+  })
+  const myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dateArr,
+      datasets: [
+        {
+          label: '最高気温',
+          data: maxArr,
+          borderColor: "red",
+          backgroundColor: "red"
+        },
+        {
+          label: '最低気温',
+          data: minArr,
+          borderColor: "blue",
+          backgroundColor: "blue"
+        }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          ticks: {
+            callback: function (value) {
+              return value + '℃'
+            }
+          }
+        }
+      }
+    }
+  });
+
 }
 
 /**
@@ -131,7 +181,6 @@ const weeklyWeather = (obj) => {
 
     html += `</tr>`
   }
-
   
   html += `</div>`
   document.getElementById('overviewContent').innerHTML += html
@@ -249,7 +298,6 @@ const todayTomorrow = (obj) => {
  * @param {*} obj
  */
 const forecast3days = async (obj) => {
-  console.log(obj)
   const timeDifines = obj["timeDefines"]
   let html = `
     <div class='my-5'>
